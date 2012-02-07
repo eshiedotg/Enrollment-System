@@ -1,0 +1,78 @@
+package net.dbtc;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import net.dbtc.ScheduleConflict;
+
+public class Teacher {
+  
+	private String firstName;
+	private String lastName;
+	private String IDnumber;
+	
+	private Set<Section> currentSections;
+	
+	public Teacher(String firstName, String lastName, String idNumber) {
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.IDnumber = idNumber;
+		this.currentSections = new HashSet<Section>();
+	}
+	public String getFirstName() {
+		return firstName;
+	}
+	public String getLastName() {
+		return lastName;
+	}
+	public String getFullName() {
+		StringBuffer buffer = new StringBuffer();
+		buffer.append(firstName).append(' ').append(lastName);
+		return buffer.toString();
+	}
+	public String getIDNumber() {
+		return IDnumber;
+	}
+	protected void addSection(Section section) throws ScheduleConflict {
+		Schedule sched1 = section.getLectureSchedule();
+		Schedule sched2 = section.getLabSchedule();
+		if (hasScheduleConflict(sched1)||hasScheduleConflict(sched2)) {
+			throw new ScheduleConflict("Error: You have scheduled a class in that day and time!");
+		}
+		currentSections.add(section);
+	}
+	protected boolean hasScheduleConflict(Schedule sched) {
+		for (Section s : currentSections) {
+			if ((s.getLectureSchedule()).equals(sched)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	@Override
+	public String toString() {
+		StringBuffer buffer = new StringBuffer();
+		buffer.append(firstName).append(' ').append(lastName).append(' ').append(IDnumber);
+		return buffer.toString();
+	}
+	@Override
+	public boolean equals(Object obj) {
+	if (obj == null) {
+	return false;
+	}
+	if (!(obj instanceof Teacher)) {
+	return false;
+	}
+
+	Teacher teacher = (Teacher)obj;
+		if (this.hashCode() == teacher.hashCode() &&
+				(this.firstName).equals(teacher.getFirstName()) &&
+				(this.lastName).equals(teacher.getLastName()) &&
+				(this.IDnumber).equals(teacher.getIDNumber())) {
+			return true;
+		}
+		return false;
+	}
+	
+
+}
