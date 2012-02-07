@@ -1,0 +1,95 @@
+package net.dbtc;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import net.dbtc.InvalidEnrollment;
+
+public class Section {
+  public static final int Max_Students = 40;
+	
+	private Subject subject;
+	private Teacher teacher;
+	private Schedule scheduleLecture;
+	private Schedule scheduleLab;
+	private Set<Student> students;
+	
+	public Section(Subject subject, Teacher teacher, Schedule schedule1, Schedule schedule2) throws ScheduleConflict {
+		if (teacher.hasScheduleConflict(scheduleLecture)) {
+			throw new ScheduleConflict();
+		}
+		else if (teacher.hasScheduleConflict(scheduleLab)) {
+			throw new ScheduleConflict();
+		}
+		
+		this.subject = subject;
+		this.teacher = teacher;
+		this.scheduleLecture = schedule1;
+		this.scheduleLab = schedule2;
+
+		this.teacher.addSection(this);
+		this.students = new HashSet<Student>();
+	}
+
+	public Subject getSubject() {
+		return subject;
+	}
+
+	public Teacher getTeacher() {
+		return teacher;
+	}
+
+	public Schedule getLectureSchedule() {
+		return scheduleLecture;
+	}
+	
+	public Schedule getLabSchedule() {
+		return scheduleLab;
+	}
+	
+	protected boolean hasSlot() {
+		if (students.size() < Max_Students) {
+			return true;
+		}
+		return false;
+	}
+	
+	@Override
+	public String toString() {
+		StringBuffer buffer = new StringBuffer();
+		buffer.append(subject.getSubjectCode()).append(" ");
+		buffer.append(teacher.getFullName()).append(" ");
+		buffer.append(scheduleLecture.toString());
+		buffer.append(scheduleLab.toString());
+		
+		return buffer.toString();
+	}
+	protected void enrollStudent (Student student) throws InvalidEnrollment {
+		students.add(student);
+	}
+	
+	@Override
+	public int hashCode() {
+		return subject.hashCode() + teacher.hashCode() + scheduleLecture.hashCode() + scheduleLab.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof Section)) {
+			return false;
+		}
+
+		Section section = (Section)obj;
+		if (this.hashCode() == section.hashCode() &&
+				(this.subject).equals(section.getSubject()) &&
+				(this.teacher).equals(section.getTeacher()) &&
+				(this.scheduleLecture).equals(section.getLectureSchedule()) &&
+				(this.scheduleLab.equals(section.getLabSchedule()))) {
+			return true;
+		}
+		return false;
+	}
+}
