@@ -1,0 +1,13 @@
+package net.dbtc;
+
+public class ScheduleConflict extends RuntimeException{
+  
+		public ScheduleConflict() {
+		super();
+	}
+
+	public ScheduleConflict(String errorMsg) {
+		super(errorMsg);
+	}
+
+}
