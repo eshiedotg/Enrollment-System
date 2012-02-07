@@ -1,0 +1,6 @@
+package net.dbtc;
+
+public enum Scholarship {
+  full_Scholar,non_scholar,half_scholar
+
+}
