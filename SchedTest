@@ -1,0 +1,14 @@
+package net.dbtc;
+
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
+public class SchedTest {
+
+  @Test
+	public void test() {
+		fail("Not yet implemented");
+	}
+
+}
