@@ -1,0 +1,86 @@
+package net.dbtc;
+
+public class Schedule {
+  
+	private Days day;
+	private Hours hourStart;
+	private Hours hourEnd;
+	
+	public Schedule(Days day, Hours hour1, Hours hour2) {
+		this.day = day;
+		this.hourStart = hour1;
+		this.hourEnd = hour2;
+	}
+	public Days getDay() {
+		return day;
+	}
+	public Hours getHourStart() {
+		return hourStart;
+	}
+	public Hours getHourEnd() {
+		return hourEnd;
+	}
+	
+	@Override
+	public String toString() {
+		StringBuffer buffer = new StringBuffer();
+		
+		if (day.equals(Days.monday)) {
+			buffer.append("Monday ");
+		}
+		else if (day.equals(Days.tuesday)) {
+			buffer.append("Tuesday ");
+		}
+		else if (day.equals(Days.wednesday)) {
+			buffer.append("Wednesday ");
+		}
+		else if (day.equals(Days.thursday)) {
+			buffer.append("Thursday ");
+		}
+		else if (day.equals(Days.friday)) {
+			buffer.append("Fridat ");
+		}
+		else if (day.equals(Days.saturday)) {
+			buffer.append("Saturday ");
+		}
+		
+		if (hourStart.equals(Hours.Am0730)) {
+			buffer.append("7:30Am-");
+		}
+		else if (hourStart.equals(Hours.Pm0330)) {
+			buffer.append("3:30Pm-");
+		}
+		
+		if (hourEnd.equals(Hours.Am0930)) {
+			buffer.append("9:30Am");
+		}
+		else if (hourEnd.equals(Hours.Pm0630)) {
+			buffer.append("6:30Pm");
+		}
+		
+		return buffer.toString();
+	}
+	@Override
+	public int hashCode() {
+		return day.hashCode() * hourStart.hashCode() * hourEnd.hashCode();
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+				return false;
+		}
+		if (!(obj instanceof Schedule)) {
+			return false;
+		}
+
+		Schedule sched = (Schedule)obj;
+		if ((this.hashCode() == sched.hashCode()) &&
+				(this.day).equals(sched.getDay()) &&
+				(this.hourStart).equals(sched.getHourStart()) &&
+				(this.hourEnd).equals(sched.getHourEnd())) {
+			return true;
+		}
+
+		return false;
+	}
+}
