@@ -1,0 +1,18 @@
+package net.dbtc;
+
+import junit.framework.Assert;
+
+import org.junit.Test;
+
+public class ScheduleTest {
+  
+	@Test
+	public void correctScheduleFormat(){
+		Schedule sched1 = new Schedule(Days.monday, Hours.Am0730, Hours.Am0930);
+		Schedule sched2 = new Schedule(Days.tuesday, Hours.Pm0330, Hours.Pm0630);
+		
+		Assert.assertEquals("Mon 7:30Am-9:30Am", sched1.toString());
+		Assert.assertEquals("Tues 3:30Pm-6:30Pm", sched2.toString());
+	}
+
+}
