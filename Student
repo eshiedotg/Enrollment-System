@@ -1,0 +1,178 @@
+package net.dbtc;
+
+import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
+
+import net.dbtc.InvalidEnrollment;
+
+public class Student {
+
+  private String firstName;
+	private String lastName;
+	private String IDnumber;
+	private Standing standing;
+	private Scholarship scholarship;
+	private Set<Subject> creditedSubjects;
+	private Set<Section> enrolledSections;
+	
+	public Student(String firstName, String lastName, String IDnumber, Set<Subject> creditedSubjects, Standing standing, Scholarship scholarship){
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.IDnumber = IDnumber;
+		this.creditedSubjects = creditedSubjects;
+		this.standing = standing;
+		this.scholarship = scholarship;
+		
+		this.enrolledSections = new HashSet<Section>();
+		
+		if (creditedSubjects == null){
+			this.creditedSubjects = new HashSet<Subject>();
+		}
+	}
+	
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+	
+	public String getIDNumber() {
+		return IDnumber;
+	}
+
+	public Set<Subject> getCreditedSubjects() {
+		return creditedSubjects;
+	}
+
+	public Standing getStanding() {
+		return standing;
+	}
+
+	public Scholarship getScholarship() {
+		return scholarship;
+	}
+	public Set<Section> getEnrolledSections() {
+		return enrolledSections;
+	}
+	
+	public void enrollSection(Section section) throws InvalidEnrollment {
+		if (enrolledSections.contains(section)){
+			throw new InvalidEnrollment("You are Enlisted in that Section Already!");
+		}
+		if (conflictInSchedule(section)){
+			throw new InvalidEnrollment("You have Schedule/s conflicting that Section!");
+		}
+		if (prerequistesNotTaken(section.getSubject())) {
+			throw new InvalidEnrollment("You have not taken the Subject/s prerequisites!");
+		}
+		if (!section.hasSlot()) {
+			throw new InvalidEnrollment("The Section is already full!");
+		}
+		if (isMaxUnits()) {
+			throw new InvalidEnrollment("You will exceeded the allowable units!");
+		}
+		enrolledSections.add(section);
+		section.enrollStudent(this);
+	}
+	private boolean prerequistesNotTaken(Subject subject) {
+		return !creditedSubjects.contains(Subject.getPrerequisites());
+	}
+	private boolean conflictInSchedule(Section section){
+		Schedule tempSched = section.getLectureSchedule();
+		for (Section x : enrolledSections) {
+			Schedule realSched = x.getLectureSchedule();
+			if (realSched.equals(tempSched)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	public boolean isMaxUnits() {
+		int maxLoad = 0;
+		if (standing.equals(Standing.firstYear)){
+			maxLoad = 18;
+		}
+		if (standing.equals(Standing.secondYear)){
+			maxLoad = 24;
+		}
+		if (standing.equals(Standing.thirdYear)){
+			maxLoad = 24;
+		}
+		if (standing.equals(Standing.fourthYear)){
+			maxLoad = 21;
+		}
+		return enrolledLoad() >= maxLoad;
+	}
+	public int minLoad() {
+		if (standing.equals(Standing.firstYear)){
+			return 15;
+		}
+		else {
+			return 18;
+		}
+	}
+	private int enrolledLoad(){
+		return enrolledSections.size() * Subject.Units_Of_Subject;
+	}
+	public BigDecimal computeTuitionfee(){
+		if (enrolledLoad() < minLoad()) {
+			throw new InvalidEnrollment("You are under the allowable minimum Load!");
+		}
+		
+		BigDecimal tuitionFee = new BigDecimal("1");
+		BigDecimal pricePerSubject = new BigDecimal("2000");
+		BigDecimal numberOfEnrolledSubjects = new BigDecimal (enrolledSections.size());
+		BigDecimal miscellaneous = new BigDecimal("2000");
+		
+		BigDecimal factor = BigDecimal.ONE;
+		if (scholarship.equals(Scholarship.half_scholar)){
+			factor = new BigDecimal("0.5");
+		}
+		if (scholarship.equals(Scholarship.full_Scholar)){
+			factor = new BigDecimal("0");
+		}
+		
+		tuitionFee = numberOfEnrolledSubjects.multiply(pricePerSubject);
+		tuitionFee = tuitionFee.multiply(factor);
+		tuitionFee = tuitionFee.add(miscellaneous);
+		tuitionFee.setScale(2, BigDecimal.ROUND_HALF_UP);
+	
+		return tuitionFee;
+	}
+	@Override
+	public String toString() {
+		StringBuffer buffer = new StringBuffer();
+		buffer.append(firstName).append(" ").append(lastName).append(" ").append(IDnumber);
+		return buffer.toString();	
+	}
+	@Override
+	public int hashCode() {
+		return IDnumber.hashCode();
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof Student)) {
+			return false;
+		}
+		
+		Student student = (Student)obj;
+		if (this.hashCode() == student.hashCode() &&
+				(this.firstName).equals(student.getFirstName()) &&
+				(this.lastName).equals(student.getLastName()) &&
+				(this.IDnumber).equals(student.getIDNumber()) &&
+				(this.creditedSubjects).equals(student.getCreditedSubjects()) &&
+				(this.standing).equals(student.getStanding()) &&
+				(this.scholarship).equals(student.getScholarship())) {
+				return true;
+			}
+
+			return false;
+		}
+	}
+
