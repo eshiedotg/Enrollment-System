@@ -1,0 +1,6 @@
+package net.dbtc;
+
+public enum Standing {
+  firstYear, secondYear, thirdYear, fourthYear
+
+}
