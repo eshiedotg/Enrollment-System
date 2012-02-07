@@ -1,0 +1,27 @@
+package net.dbtc;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import net.dbtc.Level;
+import net.dbtc.Subject;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+public class SubjectTest {
+  @Test
+	public void correctSubjectFormat(){
+		String correctformat = "PHYS2 undergraduate";
+		
+		Subject physics1 = new Subject("PHYS1", null, Level.undergraduate);
+		Set<Subject> PHYS2prerequisite = new HashSet<Subject>();
+		PHYS2prerequisite.add(physics1);
+		
+		Subject physics2 = new Subject("PHYS2", PHYS2prerequisite, Level.undergraduate);
+		
+		Assert.assertEquals(correctformat, physics2.toString());
+		
+	}
+
+}
