@@ -1,0 +1,13 @@
+package net.dbtc;
+
+public class InvalidEnrollment extends RuntimeException {
+  
+	public InvalidEnrollment() {
+		super();
+	}
+
+	public InvalidEnrollment(String errorMsg) {
+		super(errorMsg);
+	}
+
+}
