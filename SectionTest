@@ -1,0 +1,37 @@
+package net.dbtc;
+
+import net.dbtc.Hours;
+import net.dbtc.Level;
+import net.dbtc.Schedule;
+import net.dbtc.Section;
+import net.dbtc.Subject;
+import net.dbtc.Teacher;
+import net.dbtc.ScheduleConflict;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+public class SectionTest {
+  
+	@Test
+	public void createSection() {
+		Subject physics1 = new Subject("PHYS1", null,Level.undergraduate);
+		Teacher severusSnape = new Teacher("Severus", "Snape", "2-05-143");
+		Schedule sched1 = new Schedule (Days.monday, Hours.Am0730, Hours.Am0930);
+		Schedule sched2 = new Schedule (Days.tuesday, Hours.Pm0330, Hours.Pm0630);
+		Section PHYS121 = new Section (physics1, severusSnape, sched1, sched2);
+		
+	}
+	
+	@Test
+	public void correctEctionFormat() {
+		Subject physics1 = new Subject("PHYS1", null,Level.undergraduate);
+		Teacher severusSnape = new Teacher("Severus", "Snape", "2-05-143");
+		Schedule sched1 = new Schedule (Days.monday, Hours.Am0730, Hours.Am0930);
+		Schedule sched2 = new Schedule (Days.tuesday, Hours.Pm0330, Hours.Pm0630);
+		Section PHYS121 = new Section (physics1, severusSnape, sched1, sched2);
+		
+		Assert.assertEquals("PHYS1 Severus Snape Monday 7:30Am-9:30Am Tuesday 3:30Pm-6:30Pm", PHYS121.toString());
+	}
+
+}
