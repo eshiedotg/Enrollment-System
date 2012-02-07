@@ -1,0 +1,69 @@
+package net.dbtc;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import net.dbtc.Days;
+import net.dbtc.Hours;
+import net.dbtc.Level;
+import net.dbtc.Schedule;
+import net.dbtc.Scholarship;
+import net.dbtc.Section;
+import net.dbtc.Standing;
+import net.dbtc.Student;
+import net.dbtc.Subject;
+import net.dbtc.Teacher;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+public class StudentTest {
+
+  @Test
+	public void enrollToSection(){
+		Student daphne = new Student("Daphne", "De Jesus", "3-08-084", null, Standing.firstYear, Scholarship.non_scholar); 
+		Subject physics1 = new Subject("PHYS1", null,Level.undergraduate);
+		Teacher severusSnape = new Teacher("Severus", "Snape", "2-05-143");
+		Schedule sched1 = new Schedule (Days.monday, Hours.Am0730, Hours.Am0930);
+		Schedule sched2 = new Schedule (Days.tuesday, Hours.Pm0330, Hours.Pm0630);
+		Section PHYS121 = new Section (physics1, severusSnape, sched1, sched2);		
+	
+		daphne.enrollSection(PHYS121);
+		
+		Assert.assertTrue(daphne.getEnrolledSections().contains(PHYS121));
+	}
+	@Test (expected = ScheduleConflict.class )
+	public void scheduleConflictTest(){
+		Student ness = new Student("Daphne", "De Jesus", "3-08-084", null, Standing.firstYear, Scholarship.non_scholar); 
+		Subject physics1 = new Subject("PHYS1", null,Level.undergraduate);
+		Teacher severusSnape = new Teacher("Severus", "Snape", "2-05-143");
+		Schedule sched1 = new Schedule (Days.monday, Hours.Am0730, Hours.Am0930);
+		Schedule sched2 = new Schedule (Days.tuesday, Hours.Pm0330, Hours.Pm0630);
+		Section PHYS121 = new Section (physics1, severusSnape, sched1, sched2);	
+
+		ness.enrollSection(PHYS121);
+		 
+		Subject english = new Subject("PHYS1", null,Level.undergraduate);
+		Teacher drFrost = new Teacher("Severus", "Snape", "2-05-143");
+		Schedule sched = new Schedule (Days.monday, Hours.Am0730, Hours.Am0930);
+		Section PHYS221 = new Section (english, drFrost, sched, null);	
+	
+		ness.enrollSection(PHYS221);
+	}
+	@Test //(expected = InvalidEnrollment.class)
+	public void prerequisitesError(){
+		
+		Student jun = new Student("Daphne", "De Jesus", "3-08-084", null, Standing.firstYear, Scholarship.non_scholar);
+		Subject physics = new Subject("PHYS1", null,Level.undergraduate);
+		Set<Subject> PHYSprereq = new HashSet<Subject>();
+		PHYSprereq.add(physics);
+		
+		Subject physics2 = new Subject("PHYS2", PHYSprereq, Level.undergraduate);
+		Teacher alec = new Teacher("Severus", "Snape", "2-05-143");
+		Schedule sched = new Schedule (Days.monday, Hours.Am0730, Hours.Am0930);
+		Section PHYS321 = new Section (physics2, alec, sched, null);	
+	
+		jun.enrollSection(PHYS321);
+	}
+	
+}
